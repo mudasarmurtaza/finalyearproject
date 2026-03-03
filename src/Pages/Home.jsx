@@ -83,7 +83,9 @@ export const Home = () => {
                                 cursorStyle='_'
                                 typeSpeed={60}
                                 deleteSpeed={40}
+
                                 delaySpeed={2000}
+
                             />
                         </span>
                     </h1>

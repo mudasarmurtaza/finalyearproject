@@ -166,11 +166,11 @@ export const Navbar = () => {
                             </>
                         )}
 
-                        <li className="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        {/* <li className="nav-item ms-lg-3 mt-3 mt-lg-0">
                             <NavLink to="/contractor-dashboard" className="premium-btn text-decoration-none d-inline-block">
                                 Learn More
                             </NavLink>
-                        </li>
+                        </li> */}
 
                         {authenticated && (
                             <li className="nav-item ms-lg-2 mt-3 mt-lg-0 list-unstyled">

@@ -1,19 +1,20 @@
 import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { CustomerHeader } from "./CustomerHeader";
-import { CustomerSidebar } from "./CustomerSidebaar";
+import { CustomerSidebar } from "./CustomerSidebaar"; // make sure the file is correctly named
 
 export const CustomerLayout = () => {
   const [showSidebar, setShowSidebar] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 992);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 992);
+      const mobile = window.innerWidth < 992;
+      setIsMobile(mobile);
 
-      // Auto close sidebar when switching to desktop
-      if (window.innerWidth >= 992) {
-        setShowSidebar(false);
+      if (!mobile) {
+        setShowSidebar(false); // auto close overlay when switching to desktop
       }
     };
 
@@ -23,58 +24,55 @@ export const CustomerLayout = () => {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
-
-      {/* ✅ Mobile Overlay */}
+      {/* Mobile overlay */}
       {isMobile && showSidebar && (
         <div
           onClick={() => setShowSidebar(false)}
           style={{
             position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
+            inset: 0,
             backgroundColor: "rgba(0,0,0,0.4)",
             zIndex: 999,
           }}
         />
       )}
 
-      {/* ✅ Sidebar */}
+      {/* Sidebar */}
       <div
         style={{
           position: "fixed",
           top: 0,
-          left: isMobile ? (showSidebar ? "0" : "-220px") : "0",
-          width: "220px",
+          left: isMobile ? (showSidebar ? 0 : "-240px") : 0,
+          width: isMobile ? 240 : collapsed ? 70 : 240,
           height: "100vh",
-          backgroundColor: "#212529",
-          transition: "left 0.3s ease",
+          transition: "all 0.3s ease",
           zIndex: 1000,
         }}
       >
         <CustomerSidebar
           showSidebar={showSidebar}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
           setShowSidebar={setShowSidebar}
         />
       </div>
 
-      {/* ✅ Main Content */}
+      {/* Main content */}
       <div
         style={{
           flex: 1,
-          marginLeft: isMobile ? "0" : "220px",
+          // Desktop: leave space for sidebar; Mobile: full width
+          marginLeft: !isMobile ? (collapsed ? 70 : 240) : 0,
+          transition: "margin-left 0.3s ease",
           display: "flex",
           flexDirection: "column",
-          transition: "margin-left 0.3s ease",
         }}
       >
         <CustomerHeader setShowSidebar={setShowSidebar} />
-
         <main
           style={{
             flex: 1,
-            padding: "20px",
+            padding: 20,
             backgroundColor: "#f8f9fa",
             overflowY: "auto",
           }}
