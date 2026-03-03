@@ -1,34 +1,34 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { NavLink, useNavigate } from "react-router-dom"; // ✅ added useNavigate
+import { NavLink, useNavigate } from "react-router-dom";
 
 export const CustomerLogin = () => {
-  const [email, setEmail] = useState(""); // ✅ state for email
-  const [password, setPassword] = useState(""); // ✅ state for password
-  const [error, setError] = useState(""); // ✅ error handling
-  const [customer, setCustomer] = useState(null); // ✅ customer state
+  const [email, setEmail] = useState(""); // email state
+  const [password, setPassword] = useState(""); // password state
+  const [error, setError] = useState(""); // error message
+  const [customer, setCustomer] = useState(null); // logged‑in customer info
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => { // ✅ new login handler
+  // ---------------------------------------------------------------------
+  // Login handler – communicates with backend, stores token, redirects
+  // ---------------------------------------------------------------------
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
       const res = await fetch("http://localhost:5000/customer/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await res.json();
-
       if (res.ok) {
-        localStorage.setItem("customerToken", data.token); // ✅ save JWT separately for customers
+        localStorage.setItem("customerToken", data.token);
         localStorage.setItem("customer", JSON.stringify(data.user));
-        window.dispatchEvent(new Event("authChange")); // ✅ notify navbar
+        window.dispatchEvent(new Event("authChange"));
         setCustomer(data.user);
         alert("Login successful!");
-        navigate("/home"); // ✅ redirect to home
+        navigate("/customer-profile");
       } else {
         setError(data.message || "Login failed");
       }
@@ -38,63 +38,64 @@ export const CustomerLogin = () => {
     }
   };
 
-  return (
-    <div className="d-flex justify-content-center align-items-center vh-100 " style={{ backgroundColor: '#D9D9D9' }}>
-      <div className="card shadow p-4" style={{ width: "35rem", height: 'auto', backgroundColor: "#b0c4cf" }}>
-        <h4 className="text-center mb-4" style={{ color: "#2e5e77", fontWeight: "600" }}>
-          Customer Login
-        </h4>
+  // ---------------------------------------------------------------------
+  // Logout handler – clears auth data and returns to home page
+  // ---------------------------------------------------------------------
+  const handleLogout = () => {
+    localStorage.removeItem("customerToken");
+    localStorage.removeItem("customer");
+    window.dispatchEvent(new Event("authChange"));
+    navigate("/home");
+  };
 
-        <form onSubmit={handleLogin}> {/* ✅ wrap in form */}
-          {/* Email Input */}
+  // ---------------------------------------------------------------------
+  // UI – glassmorphism card, fully responsive, premium button styles
+  // ---------------------------------------------------------------------
+  return (
+    <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "#D9D9D9" }}>
+      <div className="card login-card p-4" style={{ width: "35rem", maxWidth: "90%" }}>
+        <h4 className="text-center mb-4" style={{ color: "#2e5e77", fontWeight: "600" }}>Customer Login</h4>
+        <form onSubmit={handleLogin}>
+          {/* Email */}
           <div className="mb-4">
             <input
               type="email"
               className="form-control"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} // ✅ controlled input
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
-
-          {/* Password Input */}
+          {/* Password */}
           <div className="mb-4">
             <input
               type="password"
               className="form-control"
               placeholder="Enter your password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} // ✅ controlled input
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-
-          {/* Error Message */}
-          {error && <p className="text-danger">{error}</p>} {/* ✅ show error */}
-
-          {/* Forgot Password */}
-          <div className="mb-4">
-            <a href="#" className="text-decoration-none" style={{ color: "#2e5e77", fontSize: "14px" }}>
-              Forgot Password ?
-            </a>
+          {/* Error message */}
+          {error && <p className="text-danger">{error}</p>}
+          {/* Buttons */}
+          <div className="d-flex gap-2 mb-4">
+            <button type="submit" className="btn flex-fill fw-bold" style={{ background: "linear-gradient(135deg, #fbbf24 0%, #d97706 100%)", color: "#ffffff" }}>
+              Login
+            </button>
+            <button type="button" className="btn btn-outline-light flex-fill fw-bold" onClick={handleLogout} style={{ borderColor: "#fbbf24", color: "#fbbf24" }}>
+              Logout
+            </button>
           </div>
-
-          {/* Login Button */}
-          <button type="submit" className="btn w-100 text-white fw-bold mb-4" style={{ backgroundColor: "#3b6f8c" }}>
-            Login
-          </button>
         </form>
-
-        {/* Signup Link */}
         <p className="text-center mt-3 mb-0" style={{ fontSize: "14px" }}>
-          Don’t have an account ?{" "}
+          Don’t have an account?{' '}
           <NavLink to="/customer-signup" className="fw-bold text-decoration-none" style={{ color: "#2e5e77" }}>
             Signup
           </NavLink>
         </p>
-
-        {/* ✅ Show logged in customer info */}
         {customer && (
           <div className="mt-4 text-center">
             <h6>Welcome, {customer.name}!</h6>

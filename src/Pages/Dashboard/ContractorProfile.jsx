@@ -11,32 +11,32 @@ export const ContractorProfile = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [removeProfile, setRemoveProfile] = useState(false);
-  
-// ✅ Load contractor from localStorage first
-useEffect(() => {
-  const stored = localStorage.getItem("contractor");
-  if (stored) {
-    const parsed = JSON.parse(stored);
-    setContractor(parsed);
-    setOriginalData(parsed);
-  }
-}, []);
 
-// ✅ Then fetch latest documents from backend
-useEffect(() => {
-  const fetchFreshData = async () => {
-    if (!contractor?._id) return;
-    const res = await fetch(`http://localhost:5000/contractor/${contractor._id}`);
-    const data = await res.json();
-    localStorage.setItem("contractor", JSON.stringify(data));
-    setContractor(data);
-    setOriginalData(data);
-    console.log(data);
-  };
-  
+  // ✅ Load contractor from localStorage first
+  useEffect(() => {
+    const stored = localStorage.getItem("contractor");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setContractor(parsed);
+      setOriginalData(parsed);
+    }
+  }, []);
 
-  fetchFreshData();
-}, [contractor]);
+  // ✅ Then fetch latest documents from backend
+  useEffect(() => {
+    const fetchFreshData = async () => {
+      if (!contractor?._id) return;
+      const res = await fetch(`http://localhost:5000/contractor/${contractor._id}`);
+      const data = await res.json();
+      localStorage.setItem("contractor", JSON.stringify(data));
+      setContractor(data);
+      setOriginalData(data);
+      // console.log(data);
+    };
+
+
+    fetchFreshData();
+  }, [contractor]);
 
 
   if (!contractor) {

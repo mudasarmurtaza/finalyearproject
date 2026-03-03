@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../css/Navbar.css";
-import Logo from "../assets/About_Page_Pics/Logo.png";
-import { User } from "lucide-react";
+import { User, Home, UserPlus, LogIn } from "lucide-react";
 
 export const Navbar = () => {
     const navigate = useNavigate();
@@ -70,94 +69,95 @@ export const Navbar = () => {
     };
 
     return (
-        <nav className="navbar navbar-expand-lg fixed-top" style={{ backgroundColor: "#3B6D8A", zIndex: 1030 }}>
-
+        <nav className="navbar navbar-expand-lg fixed-top custom-navbar">
             <div className="container">
-                <a className="navbar-brand text-white" href="#">
-                    <img src={Logo} alt="Logo" width="60" className="d-inline-block align-text-top" />{" "}
+                <a className="navbar-brand text-white logo-container" href="#" onClick={(e) => { e.preventDefault(); navigate('/home'); }}>
+                    <Home className="logo-icon" size={36} color="#fbbf24" strokeWidth={2.5} />
+                    <span className="logo-text">Renexa<span className="logo-dot">.ai</span></span>
                 </a>
 
                 <button
-                    className="navbar-toggler"
+                    className="navbar-toggler custom-toggler"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
                 <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
-                    <ul className="navbar-nav fs-4 fw-bold">
-                        <li className="nav-item mx-2">
-                            <NavLink to="/home" className="nav-link text-white">Home</NavLink>
+                    <ul className="navbar-nav align-items-center w-100 justify-content-end gap-2">
+                        <li className="nav-item">
+                            <NavLink to="/home" className="nav-link custom-link">Home</NavLink>
                         </li>
-                        <li className="nav-item mx-2">
-                            <NavLink to="/about-us" className="nav-link text-white">About Us</NavLink>
+                        <li className="nav-item">
+                            <NavLink to="/about-us" className="nav-link custom-link">About Us</NavLink>
                         </li>
-                        <li className="nav-item mx-2">
-                            <NavLink to="/services" className="nav-link text-white">Services</NavLink>
+                        <li className="nav-item">
+                            <NavLink to="/services" className="nav-link custom-link">Services</NavLink>
                         </li>
 
                         {authenticated ? (
-                            <li className="nav-item mx-2">
-                                <NavLink onClick={handleLogout} className="nav-link text-white">
+                            <li className="nav-item">
+                                <NavLink onClick={handleLogout} className="nav-link custom-link" to="#">
                                     Logout
                                 </NavLink>
                             </li>
                         ) : (
                             <>
-                                <li className="nav-item dropdown mx-2">
+                                <li className="nav-item dropdown">
                                     <a
-                                        className="nav-link dropdown-toggle text-white"
+                                        className="nav-link dropdown-toggle custom-link d-flex align-items-center gap-1"
                                         href="#"
                                         id="registerDropdown"
                                         role="button"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
                                     >
-                                        Register
+                                        <UserPlus size={18} /> Register
                                     </a>
                                     <ul
-                                        className="dropdown-menu"
+                                        className="dropdown-menu custom-dropdown-menu"
                                         aria-labelledby="registerDropdown"
-                                        style={{ backgroundColor: "#D9D9D9" }}
                                     >
                                         <li>
-                                            <NavLink to="/customer-signup" className="dropdown-item">
+                                            <NavLink to="/customer-signup" className="dropdown-item custom-dropdown-item">
                                                 As Investor
                                             </NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/contractor-signup" className="dropdown-item">
+                                            <NavLink to="/contractor-signup" className="dropdown-item custom-dropdown-item">
                                                 As Contractor
                                             </NavLink>
                                         </li>
                                     </ul>
                                 </li>
 
-                                <li className="nav-item dropdown mx-2">
+                                <li className="nav-item dropdown">
                                     <a
-                                        className="nav-link dropdown-toggle text-white"
+                                        className="nav-link dropdown-toggle custom-link d-flex align-items-center gap-1"
                                         href="#"
                                         id="loginDropdown"
                                         role="button"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
                                     >
-                                        Login
+                                        <LogIn size={18} /> Login
                                     </a>
                                     <ul
-                                        className="dropdown-menu"
+                                        className="dropdown-menu custom-dropdown-menu"
                                         aria-labelledby="loginDropdown"
-                                        style={{ backgroundColor: "#D9D9D9" }}
                                     >
                                         <li>
-                                            <NavLink to="/customer-login" className="dropdown-item">
+                                            <NavLink to="/customer-login" className="dropdown-item custom-dropdown-item">
                                                 As Investor
                                             </NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/contractor-login" className="dropdown-item">
+                                            <NavLink to="/contractor-login" className="dropdown-item custom-dropdown-item">
                                                 As Contractor
                                             </NavLink>
                                         </li>
@@ -166,24 +166,23 @@ export const Navbar = () => {
                             </>
                         )}
 
-                        <li className="nav-item mx-4 mt-1">
-                            <NavLink to="/contractor-dashboard" className="btn btn-outline-light rounded-pill">
+                        <li className="nav-item ms-lg-3 mt-3 mt-lg-0">
+                            <NavLink to="/contractor-dashboard" className="premium-btn text-decoration-none d-inline-block">
                                 Learn More
                             </NavLink>
                         </li>
+
+                        {authenticated && (
+                            <li className="nav-item ms-lg-2 mt-3 mt-lg-0 list-unstyled">
+                                <NavLink
+                                    to={localStorage.getItem("token") ? "/contractor-profile" : "/customer-profile"}
+                                    className="profile-btn text-decoration-none"
+                                >
+                                    <User size={22} />
+                                </NavLink>
+                            </li>
+                        )}
                     </ul>
-
-                    {authenticated && (
-                        <li className="nav-item mx-4 mt-1 list-unstyled">
-                            <NavLink
-                                to={localStorage.getItem("token") ? "/contractor-profile" : "/customer-profile"}
-                                className="btn btn-outline-light rounded-pill"
-                            >
-                                <User size={25} />
-                            </NavLink>
-                        </li>
-                    )}
-
                 </div>
             </div>
         </nav>

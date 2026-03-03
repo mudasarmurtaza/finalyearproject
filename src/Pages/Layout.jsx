@@ -7,9 +7,9 @@ function Layout() {
   return (
     <>
       <Navbar />
-      <div style={{ paddingTop: "90px" }}>
+      <div >
         <Outlet />
-      </div>
+      </div >
       <Footer />
     </>
   );

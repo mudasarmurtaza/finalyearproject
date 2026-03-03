@@ -32,7 +32,7 @@ export const ContractorLogin = () => {
         window.dispatchEvent(new Event("authChange"));
         setContractor(data.user); // ✅ store contractor info
         alert("Login successful!");
-        navigate('/home');
+        navigate('/contractor-profile');
 
       } else {
         setError(data.msg || "Login failed");

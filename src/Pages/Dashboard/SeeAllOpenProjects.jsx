@@ -15,6 +15,9 @@ export const SeeAllOpenProjects = () => {
     const fetchProjects = async () => {
       try {
         const res = await fetch(`http://localhost:5000/contractor/projects/${contractorId}`);
+        console.log(contractorId);
+                console.log(res);
+
         const data = await res.json();
 
         if (Array.isArray(data)) {

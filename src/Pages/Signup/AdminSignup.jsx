@@ -11,10 +11,16 @@ export const AdminSignup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
+      console.log(email);
+            console.log(password);
+
+      // console.log(res);
       const res = await axios.post("http://localhost:5000/admin/signup", {
         email,
         password,
       });
+            console.log(res);
+
       setMessage(res.data.message);
       navigate('/admin/login');
     } catch (err) {
